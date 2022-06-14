@@ -1,0 +1,6 @@
+venv/
+*__pycache__/
+crab/db.sqlite3
+
+
+crab/users/migrations/*_initial.py
