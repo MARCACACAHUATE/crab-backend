@@ -3,4 +3,5 @@ venv/
 crab/db.sqlite3
 
 
-crab/users/migrations/*_initial.py
+crab/users/migrations/00*
+crab/noticias/migrations/00*
