@@ -1,7 +1,7 @@
 venv/
 *__pycache__/
 crab/db.sqlite3
-
+pyrightconfig.json
 
 crab/users/migrations/00*
 crab/noticias/migrations/00*

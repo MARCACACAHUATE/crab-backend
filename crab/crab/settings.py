@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Packages
+    'rest_framework',
+    'django_extensions',
     # Local apps
     'users.apps.UsersConfig',
     'noticias.apps.NoticiasConfig'

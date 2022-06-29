@@ -1,0 +1,5 @@
+-r ./base.txt
+
+django-extensions==3.1.5
+djangorestframework-types==0.7.0
+django-types==0.15.0
