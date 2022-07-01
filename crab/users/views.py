@@ -1,14 +1,33 @@
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 
 from .models import User
-from .serializers import StatusSerializer, UserSerializer
+from .serializers import StatusSerializer, UserSerializer, UserUpdateSerializer
+from .permissions import IsAccountOwner
 
 
-class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class UserViewSet(
+        mixins.ListModelMixin,
+        mixins.CreateModelMixin,
+        mixins.UpdateModelMixin,
+        viewsets.GenericViewSet
+        ):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        if self.action in ["update","partial_update"]:
+            return UserUpdateSerializer
+        return UserSerializer
+
+    def get_permissions(self):
+        permissions = []
+        if self.action in ["update","partial_update"]:
+            permissions.append(IsAccountOwner)
+            permissions.append(IsAdminUser)
+        return [permission() for permission in permissions]
 
     @action(detail=True, methods=["post"], serializer_class=StatusSerializer)
     def status(self, request, pk = None):
