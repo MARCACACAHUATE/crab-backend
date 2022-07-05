@@ -1,10 +1,10 @@
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
 from .models import User
-from .serializers import StatusSerializer, UserSerializer, UserUpdateSerializer, UserLoginSerializer
+from .serializers import StatusSerializer, UserSerializer, UserUpdateSerializer, UserLoginSerializer, UserSignUpSerializer
 from .permissions import IsAccountOwner
 
 
@@ -15,20 +15,25 @@ class UserViewSet(
         viewsets.GenericViewSet
         ):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
 
     def get_serializer_class(self):
         if self.action in ["update","partial_update"]:
             return UserUpdateSerializer
         if self.action == "login":
             return UserLoginSerializer
+        if self.action == "create":
+            return UserSignUpSerializer
         return UserSerializer
 
     def get_permissions(self):
-        permissions = []
         if self.action in ["update","partial_update"]:
-            permissions.append(IsAccountOwner)
-            permissions.append(IsAdminUser)
+            permissions = [IsAccountOwner, IsAdminUser, IsAuthenticated]
+        elif self.action in ["create", "login"]:
+            permissions = [AllowAny]
+        elif self.action in ["list", "status"]:
+            permissions = [IsAdminUser, IsAuthenticated]
+        else:
+            permissions = [IsAuthenticated]
         return [permission() for permission in permissions]
 
     @action(detail=True, methods=["post"], serializer_class=StatusSerializer)
@@ -55,3 +60,10 @@ class UserViewSet(
         serializer.is_valid(raise_exception=True)
         data = serializer.save()
         return Response(data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        data = UserSerializer(user).data
+        return Response(data, status=status.HTTP_201_CREATED)

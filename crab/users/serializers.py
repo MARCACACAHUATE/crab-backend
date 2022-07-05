@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, password_validation
 
 from .models import User
 
@@ -42,4 +42,23 @@ class UserLoginSerializer(serializers.Serializer):
 
 class StatusSerializer(serializers.Serializer):
     is_active = serializers.BooleanField(required=True)
+
+
+class UserSignUpSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, min_length=1, required=True)
+    password = serializers.CharField(min_length=4)
+    password_confirm = serializers.CharField(min_length=4)
+    email = serializers.EmailField()
+
+    def validate(self, validate_data):
+        if validate_data["password"] != validate_data["password_confirm"]:
+            raise serializers.ValidationError("Las contraseñas no coinciden")
+        password_validation.validate_password(validate_data["password"])
+        return validate_data
+
+    def create(self, data):
+        data.pop("password_confirm")
+        print(data)
+        user = User.objects.create_user(**data) 
+        return user
 
