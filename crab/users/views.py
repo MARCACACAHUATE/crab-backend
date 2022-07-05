@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 
 from .models import User
-from .serializers import StatusSerializer, UserSerializer, UserUpdateSerializer
+from .serializers import StatusSerializer, UserSerializer, UserUpdateSerializer, UserLoginSerializer
 from .permissions import IsAccountOwner
 
 
@@ -20,6 +20,8 @@ class UserViewSet(
     def get_serializer_class(self):
         if self.action in ["update","partial_update"]:
             return UserUpdateSerializer
+        if self.action == "login":
+            return UserLoginSerializer
         return UserSerializer
 
     def get_permissions(self):
@@ -46,3 +48,10 @@ class UserViewSet(
             return Response(data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=["post"])
+    def login(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.save()
+        return Response(data)
