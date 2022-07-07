@@ -1,0 +1,2 @@
+from .noticias import NoticiaModelSerializer, ListNoticiaSerializer, CreateNoticiaSerializer
+from .categorias import CategoriaModelSerializer

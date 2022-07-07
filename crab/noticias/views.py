@@ -1,16 +1,28 @@
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, status
+from rest_framework.response import Response
 
-from .serializers import CreateNoticiaSerializer
+
+from noticias.serializers import CreateNoticiaSerializer, ListNoticiaSerializer
 from .models import Noticia, Categoria, Pagina
 
-class NoticiaViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+
+class NoticiaViewSet(viewsets.GenericViewSet):
     queryset = Noticia.objects.all()
-    serializer_class = CreateNoticiaSerializer
+    serializer_class = ListNoticiaSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["categorias"] = []
+        return context
     
-    
-    #def dispatch(self, request, *args, **kwargs):
-    #    self.name_categoria = request.data["name_categoria"]
-    #    self.name_pagina = request.data["name_"]
-    #    texto = "Arriva las pinches chivas osi osi"
-    #    print(f"esto contiene la variable texto {texto} osi osi")
-    #    return super().dispatch(request, *args, **kwargs)
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = {
+            "message": "Noticias almacenadas con exito",
+            "data": {
+                "total_noticias": len(serializer.data["noticias"])
+                }
+            }
+        return Response(data, status=status.HTTP_201_CREATED)

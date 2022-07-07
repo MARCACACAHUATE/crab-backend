@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
-from .models import Noticia, Categoria, Pagina
+from noticias.models import Noticia, Categoria, Pagina
 
-class NoticiaSerializer(serializers.ModelSerializer):
+
+class NoticiaModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Noticia
         fields = "__all__"
@@ -13,14 +14,17 @@ class CreateNoticiaSerializer(serializers.Serializer):
     contenido = serializers.CharField(max_length = 255)
     fecha = serializers.DateTimeField()
     categoria = serializers.CharField(max_length=40)
-    pagina = serializers.CharField(max_length=40)
-    
 
     def validate_categoria(self, data):
         """Verifica que la categoria exista, sino la crea. """
         obj, cereated = Categoria.objects.get_or_create(categoria=data)
-        self.context['categoria'] = obj
+        self.context['categorias'].append(obj)
         return data
+
+
+class ListNoticiaSerializer(serializers.Serializer):
+    pagina = serializers.CharField(max_length=38)
+    noticias = CreateNoticiaSerializer(many=True)
 
     def validate_pagina(self, data):
         try:
@@ -30,16 +34,22 @@ class CreateNoticiaSerializer(serializers.Serializer):
         return data
 
     def create(self, data):
-        categoria = self.context['categoria']
         pagina = self.context['pagina']
+        categorias = self.context["categorias"]
+        noticias = data["noticias"]
+        data = {
+                "pagina": pagina,
+                "noticias": []
+            }
 
-        pirinola = {
-            "titulo": data["titulo"],
-            "contenido": data["contenido"],
-            "fecha": data["fecha"],
-        }
-        noticia = Noticia.objects.create(**pirinola, categoria=categoria, pagina=pagina)
+        for key, noticia in enumerate(noticias):
+            noticia.pop("categoria")
+            data["noticias"].append(Noticia.objects.create(**noticia, categoria=categorias[key], pagina=pagina))
 
-        print(noticia)
-        return noticia
-    
+
+        print(data)
+
+        return data
+
+
+
