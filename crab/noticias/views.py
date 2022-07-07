@@ -1,12 +1,12 @@
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser, AllowAny
+
+from noticias.serializers import ListNoticiaSerializer
+from .models import Noticia
 
 
-from noticias.serializers import CreateNoticiaSerializer, ListNoticiaSerializer
-from .models import Noticia, Categoria, Pagina
-
-
-class NoticiaViewSet(viewsets.GenericViewSet):
+class NoticiaViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Noticia.objects.all()
     serializer_class = ListNoticiaSerializer
 
@@ -14,6 +14,13 @@ class NoticiaViewSet(viewsets.GenericViewSet):
         context = super().get_serializer_context()
         context["categorias"] = []
         return context
+
+    def get_permissions(self):
+        if self.action == "destroy":
+            permissions = [IsAdminUser]
+        else:
+            permissions = [AllowAny]
+        return [permission() for permission in permissions]
     
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
