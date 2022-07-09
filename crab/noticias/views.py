@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 
 from noticias.serializers import ListNoticiaSerializer, NoticiaModelSerializer
 from .models import Noticia
@@ -23,8 +24,9 @@ class NoticiaViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin, viewsets.G
 
     def get_queryset(self):
         queryset = Noticia.objects.all()
-        fecha_fin = self.request.query_params.get("fecha_fin")
-        fecha = self.request.query_params.get("fecha")
+        zone = ZoneInfo("America/Mexico_City")
+        fecha_fin = datetime.fromisoformat(self.request.query_params.get("fecha_fin")).astimezone(tz=zone)
+        fecha = datetime.fromisoformat(self.request.query_params.get("fecha")).astimezone(tz=zone)
 
         if fecha_fin and fecha:
             queryset = queryset.filter(fecha__range=(fecha, fecha_fin))
@@ -38,6 +40,8 @@ class NoticiaViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin, viewsets.G
     def get_permissions(self):
         if self.action == "destroy":
             permissions = [IsAdminUser]
+        elif self.action == "list":
+            permissions = [IsAuthenticated]
         else:
             permissions = [AllowAny]
         return [permission() for permission in permissions]
