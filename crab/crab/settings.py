@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django_extensions',
     # Local apps
     'users.apps.UsersConfig',
-    'noticias.apps.NoticiasConfig'
+    'noticias.apps.NoticiasConfig',
+    'datasets.apps.DatasetsConfig',
 ]
 
 MIDDLEWARE = [
