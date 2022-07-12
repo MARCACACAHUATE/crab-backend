@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('noticias.urls', 'noticias'), namespace="noticias")),
     path('', include(('users.urls', 'users'), namespace="users")),
+    path('', include(('datasets.urls', 'datasets'), namespace='datasets')),
 ]
