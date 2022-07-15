@@ -40,3 +40,7 @@ class CreateDatasetSerializer(serializers.ModelSerializer):
         dataset = Dataset.objects.create(**data)
 
         return dataset
+
+
+class ImportDatasetSerializer(serializers.Serializer):
+    file = serializers.FileField()
