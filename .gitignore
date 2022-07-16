@@ -6,3 +6,4 @@ pyrightconfig.json
 
 crab/users/migrations/00*
 crab/noticias/migrations/00*
+crab/datasets/migrations/00*
