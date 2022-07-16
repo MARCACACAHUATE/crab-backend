@@ -1,7 +1,14 @@
+from datetime import timedelta
+
+import jwt
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, password_validation
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils import timezone
 
+from crab import settings
 from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -58,7 +65,28 @@ class UserSignUpSerializer(serializers.Serializer):
 
     def create(self, data):
         data.pop("password_confirm")
-        print(data)
         user = User.objects.create_user(**data) 
+        self.send_email_confirmation(user)
         return user
 
+    def send_email_confirmation(self, user):
+        token = self.gen_verification_token(user)
+        subject = "tu pinche cola"
+        from_email = "crab@crab.com"
+        content = render_to_string(
+                "users/emails/account_verification.html",
+                {"token": token, "user": user}
+                )
+        msg = EmailMultiAlternatives(subject, content, from_email, to=[user.email])
+        msg.attach_alternative(content, "text/html")
+        msg.send()
+
+    def gen_verification_token(self, user):
+        exp_date = timezone.now() + timedelta(days=3)
+        payload = {
+            "user": user.username,
+            "exp": int(exp_date.timestamp()),
+            "type": "email_confirmation",
+            }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+        return token
