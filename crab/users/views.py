@@ -4,8 +4,15 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
 from .models import User
-from .serializers import StatusSerializer, UserSerializer, UserUpdateSerializer, UserLoginSerializer, UserSignUpSerializer
 from .permissions import IsAccountOwner
+from .serializers import (
+        StatusSerializer,
+        UserSerializer,
+        UserUpdateSerializer,
+        UserLoginSerializer,
+        UserSignUpSerializer,
+        AccountVerificationSerializer
+        )
 
 
 class UserViewSet(
@@ -28,7 +35,7 @@ class UserViewSet(
     def get_permissions(self):
         if self.action in ["update","partial_update"]:
             permissions = [IsAccountOwner, IsAdminUser, IsAuthenticated]
-        elif self.action in ["create", "login"]:
+        elif self.action in ["create", "login", "verify"]:
             permissions = [AllowAny]
         elif self.action in ["list", "status"]:
             permissions = [IsAdminUser, IsAuthenticated]
@@ -60,6 +67,13 @@ class UserViewSet(
         serializer.is_valid(raise_exception=True)
         data = serializer.save()
         return Response(data)
+
+    @action(detail=False, methods=["post"])
+    def verify(self, request):
+        serializer = AccountVerificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Cuenta verificada"}, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
