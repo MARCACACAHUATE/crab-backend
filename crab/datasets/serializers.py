@@ -31,6 +31,12 @@ class CreateDatasetSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"No hay noticias despues de esta fecha: ultima noticia registrada => {ultima_noticia}")
         return data
 
+    def validate(self, data):
+        """ Valida que fecha_inicial no sea mayor a fecha_final """
+        if data["fecha_inicio"] > data["fecha_final"]:
+            raise serializers.ValidationError("La fecha inicial no puede estar despues de la fecha final")
+        return data
+
     def create(self, data):
         data = {
             "fecha_inicio": data["fecha_inicio"],
