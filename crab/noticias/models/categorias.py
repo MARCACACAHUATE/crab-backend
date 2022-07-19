@@ -1,7 +1,9 @@
 from django.db import models
 
+from utils.models import CrabInfoModel
 
-class Categoria(models.Model):
+
+class Categoria(CrabInfoModel):
 
     categoria = models.CharField(
         verbose_name = "Categoria",

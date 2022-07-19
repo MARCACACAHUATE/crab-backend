@@ -1,7 +1,9 @@
 from django.db import models
 
+from utils.models import CrabInfoModel
 
-class Noticia(models.Model):
+
+class Noticia(CrabInfoModel):
     titulo = models.CharField(
         verbose_name = "Titulo de la noticia",
         max_length = 40,

@@ -1,8 +1,10 @@
 from django.db import models
 from django.core.validators import URLValidator
 
+from utils.models import CrabInfoModel
 
-class Pagina(models.Model):
+
+class Pagina(CrabInfoModel):
     nombre_pagina = models.CharField(
         verbose_name = "Nombre de la pagina",
         max_length = 40,
