@@ -2,6 +2,7 @@ from datetime import timedelta
 
 import jwt
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, password_validation
 from django.core.mail import EmailMultiAlternatives
@@ -54,7 +55,17 @@ class StatusSerializer(serializers.Serializer):
 
 
 class UserSignUpSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150, min_length=1, required=True)
+    username = serializers.CharField(
+            max_length=150,
+            min_length=1,
+            required=True,
+            validators=[
+                UniqueValidator(
+                    queryset=User.objects.all(),
+                    message="username ya en uso"
+                    )
+                ]
+            )
     password = serializers.CharField(min_length=4)
     password_confirm = serializers.CharField(min_length=4)
     email = serializers.EmailField()
