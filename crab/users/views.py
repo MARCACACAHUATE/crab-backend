@@ -34,7 +34,7 @@ class UserViewSet(
 
     def get_permissions(self):
         if self.action in ["update","partial_update"]:
-            permissions = [IsAccountOwner, IsAdminUser, IsAuthenticated]
+            permissions = [IsAccountOwner, IsAuthenticated]
         elif self.action in ["create", "login", "verify"]:
             permissions = [AllowAny]
         elif self.action in ["list", "status"]:
