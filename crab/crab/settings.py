@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_extensions',
+    'drf_spectacular',
     # Local apps
     'users.apps.UsersConfig',
     'noticias.apps.NoticiasConfig',
@@ -145,7 +146,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
@@ -182,3 +184,11 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Crab Backend',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.13',
+    'SERVE_INCLUDE_SCHEMA': False,
+}

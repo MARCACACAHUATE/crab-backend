@@ -21,7 +21,7 @@ class DatasetViewSet(mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.Dest
         return CreateDatasetSerializer
 
     def get_permissions(self):
-        if self.action in ["create", "file"]:
+        if self.action in ["create", "file", "list"]:
             permissions = [IsAuthenticated]
         elif self.action in ["destroy", "update", "partial_update"]:
             permissions = [IsDatasetOwner, IsAuthenticated]

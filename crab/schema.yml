@@ -1,0 +1,697 @@
+openapi: 3.0.3
+info:
+  title: Your Project API
+  version: 1.0.0
+  description: Your project description
+paths:
+  /datasets/:
+    get:
+      operationId: datasets_list
+      tags:
+      - datasets
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dataset'
+          description: ''
+    post:
+      operationId: datasets_create
+      tags:
+      - datasets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDataset'
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateDataset'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDataset'
+          description: ''
+  /datasets/{id}/:
+    put:
+      operationId: datasets_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - datasets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDataset'
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateDataset'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDataset'
+          description: ''
+    patch:
+      operationId: datasets_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - datasets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateDataset'
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PatchedCreateDataset'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDataset'
+          description: ''
+    delete:
+      operationId: datasets_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - datasets
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /datasets/file/:
+    post:
+      operationId: datasets_file_create
+      tags:
+      - datasets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDataset'
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateDataset'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDataset'
+          description: ''
+  /noticias/:
+    get:
+      operationId: noticias_list
+      tags:
+      - noticias
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NoticiaModel'
+          description: ''
+    post:
+      operationId: noticias_create
+      tags:
+      - noticias
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListNoticia'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListNoticia'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListNoticia'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNoticia'
+          description: ''
+  /noticias/{id}/:
+    delete:
+      operationId: noticias_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this noticia.
+        required: true
+      tags:
+      - noticias
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /users/:
+    get:
+      operationId: users_list
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSignUp'
+          description: ''
+  /users/{id}/:
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+          description: ''
+  /users/{id}/status/:
+    post:
+      operationId: users_status_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /users/login/:
+    post:
+      operationId: users_login_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLogin'
+          description: ''
+  /users/verify/:
+    post:
+      operationId: users_verify_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+components:
+  schemas:
+    CreateDataset:
+      type: object
+      properties:
+        fecha_inicio:
+          type: string
+          format: date
+          title: Fecha inicial
+          description: Fecha que indica el inico del dataset
+        fecha_final:
+          type: string
+          format: date
+          description: Fecha que indica el final del dataset
+      required:
+      - fecha_final
+      - fecha_inicio
+    CreateNoticia:
+      type: object
+      properties:
+        titulo:
+          type: string
+          maxLength: 40
+        contenido:
+          type: string
+          maxLength: 255
+        fecha:
+          type: string
+          format: date-time
+        categoria:
+          type: string
+          maxLength: 40
+      required:
+      - categoria
+      - contenido
+      - fecha
+      - titulo
+    Dataset:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Creado en
+          description: Campo DateTime en el cual el usuario fue creado
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Modificado en
+          description: Campo DateTime en el cual el usuario fue modificado
+        fecha_inicio:
+          type: string
+          format: date
+          title: Fecha inicial
+          description: Fecha que indica el inico del dataset
+        fecha_final:
+          type: string
+          format: date
+          description: Fecha que indica el final del dataset
+        user:
+          type: integer
+      required:
+      - created
+      - fecha_final
+      - fecha_inicio
+      - id
+      - modified
+      - user
+    ListNoticia:
+      type: object
+      properties:
+        pagina:
+          type: string
+          maxLength: 38
+        noticias:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateNoticia'
+      required:
+      - noticias
+      - pagina
+    NoticiaModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Creado en
+          description: Campo DateTime en el cual el usuario fue creado
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Modificado en
+          description: Campo DateTime en el cual el usuario fue modificado
+        titulo:
+          type: string
+          title: Titulo de la noticia
+          description: Este campo muestra el titulo de la noticia, el cual es obligatorio
+          maxLength: 40
+        contenido:
+          type: string
+          title: Contenido de la noticia
+          description: Este campo muestra todo el contenido de una noticia
+        fecha:
+          type: string
+          format: date-time
+          title: Fecha de la noticia
+          description: Este campo almacena el fecha en al que fue publicada la noticia
+        categoria:
+          type: integer
+        pagina:
+          type: integer
+      required:
+      - categoria
+      - contenido
+      - created
+      - fecha
+      - id
+      - modified
+      - pagina
+      - titulo
+    PatchedCreateDataset:
+      type: object
+      properties:
+        fecha_inicio:
+          type: string
+          format: date
+          title: Fecha inicial
+          description: Fecha que indica el inico del dataset
+        fecha_final:
+          type: string
+          format: date
+          description: Fecha que indica el final del dataset
+    PatchedUserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Correo
+          maxLength: 254
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          maxLength: 128
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Creado en
+          description: Campo DateTime en el cual el usuario fue creado
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Modificado en
+          description: Campo DateTime en el cual el usuario fue modificado
+        email:
+          type: string
+          format: email
+          title: Correo
+          maxLength: 254
+        is_verified:
+          type: boolean
+          title: Verificado
+          description: Cambia a True cuando el usuario verifica su correo
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+      required:
+      - created
+      - email
+      - id
+      - modified
+      - password
+      - username
+    UserLogin:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 50
+          minLength: 1
+        password:
+          type: string
+          maxLength: 50
+          minLength: 1
+      required:
+      - password
+      - username
+    UserSignUp:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 150
+          minLength: 1
+        password:
+          type: string
+          minLength: 4
+        password_confirm:
+          type: string
+          minLength: 4
+        email:
+          type: string
+          format: email
+      required:
+      - email
+      - password
+      - password_confirm
+      - username
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Correo
+          maxLength: 254
+      required:
+      - email
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
