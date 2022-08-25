@@ -24,6 +24,10 @@ class NoticiaViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin, viewsets.G
 
     def get_queryset(self):
         queryset = Noticia.objects.all()
+
+        if self.request.method == "DELETE":
+            return queryset
+
         zone = ZoneInfo("America/Mexico_City")
         fecha_fin = datetime.fromisoformat(self.request.query_params.get("fecha_fin")).astimezone(tz=zone)
         fecha = datetime.fromisoformat(self.request.query_params.get("fecha")).astimezone(tz=zone)
@@ -35,6 +39,7 @@ class NoticiaViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin, viewsets.G
             queryset = queryset.filter(fecha=fecha)
         else: 
             queryset = queryset.filter(fecha=date.today().isoformat())
+            
         return queryset
 
     def get_permissions(self):
